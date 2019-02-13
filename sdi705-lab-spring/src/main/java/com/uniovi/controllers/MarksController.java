@@ -1,41 +1,62 @@
 package com.uniovi.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.uniovi.entities.Mark;
 import com.uniovi.services.MarkServices;
 
-@RestController
+@Controller
 public class MarksController {
-	
-	@Autowired //Inyectamos el servicio
-	private MarkServices markService;
+
+	@Autowired // Inyectamos el servicio
+	private MarkServices marksService;
 
 	@RequestMapping("/mark/list")
-	public String getList() {
-		return markService.getMarks().toString();
+	public String getList(Model model) {
+		model.addAttribute("markList", marksService.getMarks());
+		return "mark/list";
 	}
 
 	@RequestMapping(value = "/mark/add", method = RequestMethod.POST)
 	public String setMark(@ModelAttribute Mark mark) {
-		markService.addMark(mark);
-		return "OK";
+		marksService.addMark(mark);
+		return "redirect:/mark/list";
+	}
+
+	@RequestMapping(value = "/mark/add")
+	public String getMark() {
+		return "mark/add";
+	}
+
+	@RequestMapping(value = "/mark/edit/{id}", method = RequestMethod.POST)
+	public String setEdit(Model model, @PathVariable Long id, @ModelAttribute Mark mark) {
+		mark.setId(id);
+		marksService.addMark(mark);
+		return "redirect:/mark/details/" + id;
+	}
+
+	@RequestMapping(value = "/mark/edit/{id}")
+	public String getEdit(Model model, @PathVariable Long id) {
+		model.addAttribute("mark", marksService.getMark(id));
+		return "mark/edit";
 	}
 
 	@RequestMapping("/mark/details/{id}")
-	public String getDetail(@PathVariable Long id) {
-		return markService.getMark(id).toString();
+	public String getDetail(Model model, @PathVariable Long id) {
+		model.addAttribute("mark", marksService.getMark(id));
+		return "mark/details";
 	}
-	
+
 	@RequestMapping("/mark/delete/{id}")
 	public String deleteMark(@PathVariable Long id) {
-		markService.deleteMark(id);
-		return "OK";
+		marksService.deleteMark(id);
+		return "redirect:/mark/list";
 	}
 
 }

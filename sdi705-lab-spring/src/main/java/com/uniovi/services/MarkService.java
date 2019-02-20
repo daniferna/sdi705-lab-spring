@@ -10,7 +10,7 @@ import com.uniovi.entities.Mark;
 import com.uniovi.repositories.MarksRepository;
 
 @Service
-public class MarkServices {
+public class MarkService {
 	
 	@Autowired
 	private MarksRepository marksRepository;

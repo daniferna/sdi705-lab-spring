@@ -12,6 +12,10 @@ import com.uniovi.entities.Mark;
 import com.uniovi.services.MarkService;
 import com.uniovi.services.UsersService;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashSet;
+import java.util.Set;
+
 @Controller
 public class MarksController {
 

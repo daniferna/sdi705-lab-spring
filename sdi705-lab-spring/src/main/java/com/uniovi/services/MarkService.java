@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.uniovi.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,11 +41,23 @@ public class MarkService {
         return markObtained;
     }
 
+    public List<Mark> getMarksForUser(User user) {
+        List<Mark> marks = new ArrayList<Mark>();
+        if (user.getRole().equals("ROLE_STUDENT")) {
+            marks = marksRepository.findAllByUser(user);
+        }
+        if (user.getRole().equals("ROLE_PROFESSOR")) {
+            marks = getMarks();
+        }
+        return marks;
+    }
+
+
     public void setMarkResend(boolean revised, Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String dni = auth.getName();
         Mark mark = marksRepository.findById(id).get();
-        if(mark.getUser().getDni().equals(dni) ) {
+        if (mark.getUser().getDni().equals(dni)) {
             marksRepository.updateResend(revised, id);
         }
     }

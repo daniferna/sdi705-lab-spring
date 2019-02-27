@@ -1,5 +1,6 @@
 package com.uniovi.controllers;
 
+import com.uniovi.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import com.uniovi.services.MarkService;
 import com.uniovi.services.UsersService;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,8 +28,10 @@ public class MarksController {
     private UsersService usersService;
 
     @RequestMapping("/mark/list")
-    public String getList(Model model) {
-        model.addAttribute("markList", marksService.getMarks());
+    public String getList(Model model, Principal principal) {
+        String dni = principal.getName(); //El dni es el nombre con el que se autentica
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("markList", marksService.getMarksForUser(user));
         return "mark/list";
     }
 
@@ -38,8 +42,10 @@ public class MarksController {
     }
 
     @RequestMapping("/mark/list/update")
-    public String updateList(Model model) {
-        model.addAttribute("markList", marksService.getMarks());
+    public String updateList(Model model, Principal principal) {
+        String dni = principal.getName(); //El dni es el nombre con el que se autentica
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("markList", marksService.getMarksForUser(user));
         return "mark/list :: tableMarks";
     }
 

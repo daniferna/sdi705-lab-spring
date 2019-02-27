@@ -52,6 +52,17 @@ public class MarkService {
         return marks;
     }
 
+    public List<Mark> searchMarksByDescriptionAndNameForUser(String searchText, User user) {
+        List<Mark> marks = new ArrayList<Mark>();
+        searchText = "%"+searchText+"%";
+        if (user.getRole().equals("ROLE_STUDENT")) {
+            marks = marksRepository.searchByDescriptionNameAndUser(searchText, user);
+        }
+        if (user.getRole().equals("ROLE_PROFESSOR")) {
+            marks = marksRepository.searchByDescriptionAndName(searchText);
+        }
+        return marks;
+    }
 
     public void setMarkResend(boolean revised, Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

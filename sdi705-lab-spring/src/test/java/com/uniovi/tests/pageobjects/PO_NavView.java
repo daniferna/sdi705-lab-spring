@@ -56,5 +56,3 @@ public class PO_NavView extends PO_View {
         elementos.get(0).click();
     }
 }
-
-}
